@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme: light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TIDY — Your team’s command center</title>
+<meta name="description" content="A calm, modern workspace for tasks, deadlines and owners.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['Inter','ui-sans-serif','system-ui','sans-serif'], serif: ['"Instrument Serif"','Georgia','serif'] },
+  colors: { ink:'#1f2023', mute:'#6b6e76', violet:{ 50:'#f5f3ff',100:'#ede9fe',200:'#ddd6fe',500:'#8b5cf6',600:'#7c3aed',700:'#6d28d9' } }
+}}};
+</script>
+<style>
+  :root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html { scroll-behavior: smooth; scroll-padding-top: calc(88px + env(safe-area-inset-top, 0px)); }
+  body { background:#faf9f7; color:#1f2023; font-family:'Inter',ui-sans-serif,system-ui,sans-serif; -webkit-font-smoothing:antialiased; overflow-x:hidden; }
+  .glass { background:rgba(255,255,255,.65); backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.8); }
+  .soft { box-shadow:0 1px 2px rgba(31,32,35,.04), 0 12px 32px -12px rgba(76,29,149,.14); }
+  .glow { box-shadow:0 0 0 1px rgba(124,58,237,.3), 0 10px 30px -8px rgba(124,58,237,.55), inset 0 1px 0 rgba(255,255,255,.25); }
+  .glow:hover { box-shadow:0 0 0 1px rgba(124,58,237,.4), 0 14px 38px -8px rgba(124,58,237,.7), inset 0 1px 0 rgba(255,255,255,.3); }
+  .reveal { opacity:0; transform:translateY(22px); transition:opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); transition-delay:var(--d,0ms); }
+  .reveal.in { opacity:1; transform:none; }
+  .blob { position:absolute; border-radius:9999px; filter:blur(70px); opacity:.55; pointer-events:none; animation:float 14s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translate3d(0,0,0)} 50%{transform:translate3d(24px,-28px,0)} }
+  .tilt { transform-style:preserve-3d; transition:transform .25s ease-out; will-change:transform; }
+  .chk { appearance:none; width:18px; height:18px; border-radius:6px; border:1.5px solid #c4b5fd; background:#fff; display:grid; place-items:center; cursor:pointer; flex:none; transition:all .2s; }
+  .chk:checked { background:#7c3aed; border-color:#7c3aed; }
+  .chk:checked::after { content:''; width:8px; height:4px; border-left:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(-45deg) translate(1px,-1px); }
+  .chk:checked + span { text-decoration:line-through; color:#9a9ca3; }
+  .card { transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s; }
+  .card:hover { transform:translateY(-6px); box-shadow:0 20px 40px -16px rgba(76,29,149,.25); }
+  .card.hide { display:none; }
+  a:focus-visible, button:focus-visible, input:focus-visible { outline:2px solid #7c3aed; outline-offset:3px; border-radius:10px; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior:auto; } .blob { animation:none; }
+    .reveal { opacity:1; transform:none; transition:none; } .card, .tilt { transition:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header id="nav" class="fixed inset-x-0 top-0 z-50 transition-all duration-300" style="padding-top:env(safe-area-inset-top,0px)">
+  <div class="mx-auto mt-3 flex max-w-6xl items-center justify-between rounded-2xl px-4 py-2.5 sm:px-5 glass soft">
+    <a href="#top" class="flex items-center gap-2 font-semibold tracking-tight">
+      <span class="grid h-8 w-8 place-items-center rounded-xl bg-violet-600 text-sm text-white">T</span>
+      <span class="text-lg">TIDY</span>
+    </a>
+    <nav class="hidden items-center gap-1 text-sm font-medium text-mute md:flex" aria-label="Primary">
+      <a href="#product" class="rounded-lg px-4 py-2 transition hover:bg-violet-50 hover:text-ink">Product</a>
+      <a href="#solutions" class="rounded-lg px-4 py-2 transition hover:bg-violet-50 hover:text-ink">Solutions</a>
+      <a href="#learn" class="rounded-lg px-4 py-2 transition hover:bg-violet-50 hover:text-ink">Learn</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <a href="#contact" class="mag rounded-xl bg-ink px-4 py-2 text-sm font-medium text-white transition hover:bg-violet-700">Get in Touch</a>
+      <button id="menuBtn" class="grid h-10 w-10 place-items-center rounded-xl hover:bg-violet-50 md:hidden" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M3 6h14M3 10h14M3 14h14"/></svg>
+      </button>
+    </div>
+  </div>
+  <div id="mobileMenu" class="mx-4 mt-2 hidden rounded-2xl p-2 text-sm font-medium glass soft md:hidden">
+    <a href="#product" class="block rounded-xl px-4 py-3 hover:bg-violet-50">Product</a>
+    <a href="#solutions" class="block rounded-xl px-4 py-3 hover:bg-violet-50">Solutions</a>
+    <a href="#learn" class="block rounded-xl px-4 py-3 hover:bg-violet-50">Learn</a>
+  </div>
+</header>
+
+<main id="top">
+<!-- HERO -->
+<section class="relative isolate overflow-hidden px-5 pb-20 pt-36 sm:pt-44">
+  <div class="blob -left-24 top-10 h-72 w-72 bg-violet-200"></div>
+  <div class="blob right-0 top-40 h-80 w-80 bg-pink-200" style="animation-delay:-5s"></div>
+  <div class="blob left-1/3 top-[28rem] h-64 w-64 bg-sky-200" style="animation-delay:-9s"></div>
+
+  <div class="mx-auto max-w-4xl text-center">
+    <div class="reveal mx-auto mb-6 inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-medium text-violet-700 glass">
+      <span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-violet-500 opacity-60"></span><span class="relative inline-flex h-2 w-2 rounded-full bg-violet-600"></span></span>
+      Now accepting new projects
+    </div>
+    <h1 class="reveal font-serif text-5xl leading-[1.02] tracking-tight sm:text-7xl" style="--d:80ms">
+      Your team’s command center for <em class="text-violet-600">tasks</em> &amp; productivity
+    </h1>
+    <p class="reveal mx-auto mt-6 max-w-xl text-base leading-relaxed text-mute sm:text-lg" style="--d:160ms">
+      Plan work, set deadlines and give every task an owner — in one calm, beautifully simple workspace.
+    </p>
+    <div class="reveal mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row" style="--d:240ms">
+      <a href="#product" class="mag glow rounded-2xl bg-violet-600 px-7 py-3.5 text-sm font-semibold text-white transition">Get Started</a>
+      <a href="#solutions" class="rounded-2xl px-7 py-3.5 text-sm font-semibold text-ink transition hover:bg-white glass">See how it works</a>
+    </div>
+  </div>
+
+  <!-- Mockup card -->
+  <div class="reveal mx-auto mt-16 max-w-4xl" style="--d:340ms; perspective:1200px">
+    <div id="tilt" class="tilt rounded-[28px] p-3 glass soft sm:p-4">
+      <div class="overflow-hidden rounded-2xl bg-white/90">
+        <div class="flex items-center gap-2 border-b border-black/5 px-4 py-3">
+          <span class="h-2.5 w-2.5 rounded-full bg-rose-300"></span><span class="h-2.5 w-2.5 rounded-full bg-amber-300"></span><span class="h-2.5 w-2.5 rounded-full bg-emerald-300"></span>
+          <span class="ml-3 text-xs font-medium text-mute">Launch week · Board</span>
+          <span class="ml-auto text-xs font-medium text-violet-700" id="pct">33% done</span>
+        </div>
+        <div class="px-4 pt-3"><div class="h-1.5 overflow-hidden rounded-full bg-violet-100"><div id="bar" class="h-full rounded-full bg-gradient-to-r from-violet-500 to-pink-400 transition-all duration-500" style="width:33%"></div></div></div>
+        <div class="grid gap-3 p-4 sm:grid-cols-3">
+          <div class="rounded-xl bg-violet-50 p-4">
+            <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-violet-700">To do</p>
+            <label class="flex items-center gap-2.5 rounded-lg bg-white p-3 text-sm shadow-sm"><input type="checkbox" class="chk task"><span>Write launch brief</span></label>
+            <label class="mt-2 flex items-center gap-2.5 rounded-lg bg-white p-3 text-sm shadow-sm"><input type="checkbox" class="chk task"><span>Review pricing page</span></label>
+          </div>
+          <div class="rounded-xl bg-amber-50 p-4">
+            <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-amber-700">In progress</p>
+            <label class="flex items-center gap-2.5 rounded-lg bg-white p-3 text-sm shadow-sm"><input type="checkbox" class="chk task"><span>Design onboarding</span></label>
+            <div class="mt-2 flex items-center justify-between rounded-lg bg-white p-3 text-xs text-mute shadow-sm"><span>Due Friday</span><span class="flex -space-x-1.5"><i class="h-5 w-5 rounded-full border-2 border-white bg-violet-400"></i><i class="h-5 w-5 rounded-full border-2 border-white bg-pink-400"></i></span></div>
+          </div>
+          <div class="rounded-xl bg-emerald-50 p-4">
+            <p class="mb-3 text-xs font-semibold uppercase tracking-wider text-emerald-700">Done</p>
+            <label class="flex items-center gap-2.5 rounded-lg bg-white p-3 text-sm shadow-sm"><input type="checkbox" class="chk task" checked><span>Set up workspace</span></label>
+            <label class="mt-2 flex items-center gap-2.5 rounded-lg bg-white p-3 text-sm shadow-sm"><input type="checkbox" class="chk task" checked><span>Invite the team</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="mt-3 text-center text-xs text-mute">Try it — tick a task and watch progress update.</p>
+  </div>
+</section>
+
+<!-- PRODUCT -->
+<section id="product" class="px-5 py-20 sm:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="reveal max-w-2xl">
+      <p class="text-sm font-semibold text-violet-600">Product</p>
+      <h2 class="mt-3 font-serif text-4xl tracking-tight sm:text-5xl">Everything your team needs, nothing it doesn’t.</h2>
+    </div>
+    <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <article class="card reveal soft rounded-3xl bg-violet-100/70 p-7 lg:col-span-2" style="--d:0ms">
+        <div class="mb-10 grid h-11 w-11 place-items-center rounded-2xl bg-white text-violet-600 shadow-sm"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M8 10h8M8 14h5"/></svg></div>
+        <h3 class="text-xl font-semibold tracking-tight">Create cards, set deadlines, assign owners</h3>
+        <p class="mt-2 max-w-md text-sm leading-relaxed text-ink/70">Turn any idea into a card in seconds. Add a due date, pick an owner and watch work move from backlog to done.</p>
+      </article>
+      <article class="card reveal soft rounded-3xl bg-pink-100/70 p-7" style="--d:80ms">
+        <div class="mb-10 grid h-11 w-11 place-items-center rounded-2xl bg-white text-pink-500 shadow-sm"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h3 class="text-xl font-semibold tracking-tight">Focus timers</h3>
+        <p class="mt-2 text-sm leading-relaxed text-ink/70">Protect deep work with built-in sprints and gentle reminders.</p>
+      </article>
+      <article class="card reveal soft rounded-3xl bg-sky-100/70 p-7" style="--d:0ms">
+        <div class="mb-10 grid h-11 w-11 place-items-center rounded-2xl bg-white text-sky-500 shadow-sm"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19V9M10 19V5M16 19v-7M22 19H2"/></svg></div>
+        <h3 class="text-xl font-semibold tracking-tight">Live progress</h3>
+        <p class="mt-2 text-sm leading-relaxed text-ink/70">See how every project is tracking, at a glance.</p>
+      </article>
+      <article class="card reveal soft rounded-3xl bg-emerald-100/70 p-7" style="--d:80ms">
+        <div class="mb-10 grid h-11 w-11 place-items-center rounded-2xl bg-white text-emerald-600 shadow-sm"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.5-3.5 3-5.5 6.5-5.5s6 2 6.5 5.5M17 11a3 3 0 100-6M21.5 19c-.3-2-1.5-3.6-3.5-4.4"/></svg></div>
+        <h3 class="text-xl font-semibold tracking-tight">Shared workspaces</h3>
+        <p class="mt-2 text-sm leading-relaxed text-ink/70">Comment, mention and decide together without the noise.</p>
+      </article>
+      <article class="card reveal soft rounded-3xl bg-amber-100/70 p-7" style="--d:160ms">
+        <div class="mb-10 grid h-11 w-11 place-items-center rounded-2xl bg-white text-amber-600 shadow-sm"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7l1-8z"/></svg></div>
+        <h3 class="text-xl font-semibold tracking-tight">Automations</h3>
+        <p class="mt-2 text-sm leading-relaxed text-ink/70">Let routine updates run themselves, so you don’t have to.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTIONS -->
+<section id="solutions" class="px-5 py-20 sm:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="reveal flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+      <div class="max-w-xl">
+        <p class="text-sm font-semibold text-violet-600">Solutions</p>
+        <h2 class="mt-3 font-serif text-4xl tracking-tight sm:text-5xl">Built for the way you work.</h2>
+      </div>
+      <div id="filters" class="flex flex-wrap gap-2 text-sm font-medium" role="tablist" aria-label="Filter solutions">
+        <button data-f="all" class="rounded-full bg-ink px-4 py-2 text-white" role="tab" aria-selected="true">All</button>
+        <button data-f="teams" class="rounded-full bg-white px-4 py-2 text-mute soft" role="tab" aria-selected="false">Teams</button>
+        <button data-f="freelance" class="rounded-full bg-white px-4 py-2 text-mute soft" role="tab" aria-selected="false">Freelancers</button>
+        <button data-f="studios" class="rounded-full bg-white px-4 py-2 text-mute soft" role="tab" aria-selected="false">Studios</button>
+      </div>
+    </div>
+    <div class="mt-10 grid gap-5 md:grid-cols-3">
+      <article class="card sol soft rounded-3xl bg-white p-3" data-c="teams">
+        <div class="h-40 rounded-2xl bg-gradient-to-br from-violet-200 via-violet-100 to-pink-100"></div>
+        <div class="p-4"><span class="text-xs font-semibold text-violet-600">Teams</span><h3 class="mt-1 text-lg font-semibold tracking-tight">Sprint planning</h3><p class="mt-1 text-sm text-mute">Plan cycles, track velocity and ship on time.</p></div>
+      </article>
+      <article class="card sol soft rounded-3xl bg-white p-3" data-c="freelance">
+        <div class="h-40 rounded-2xl bg-gradient-to-br from-sky-200 via-sky-100 to-emerald-100"></div>
+        <div class="p-4"><span class="text-xs font-semibold text-sky-600">Freelancers</span><h3 class="mt-1 text-lg font-semibold tracking-tight">Client projects</h3><p class="mt-1 text-sm text-mute">One tidy board per client, with deadlines they can see.</p></div>
+      </article>
+      <article class="card sol soft rounded-3xl bg-white p-3" data-c="studios">
+        <div class="h-40 rounded-2xl bg-gradient-to-br from-amber-200 via-amber-100 to-rose-100"></div>
+        <div class="p-4"><span class="text-xs font-semibold text-amber-600">Studios</span><h3 class="mt-1 text-lg font-semibold tracking-tight">Creative reviews</h3><p class="mt-1 text-sm text-mute">Gather feedback, approve work and keep versions in order.</p></div>
+      </article>
+      <article class="card sol soft rounded-3xl bg-white p-3" data-c="teams studios">
+        <div class="h-40 rounded-2xl bg-gradient-to-br from-emerald-200 via-emerald-100 to-sky-100"></div>
+        <div class="p-4"><span class="text-xs font-semibold text-emerald-600">Teams · Studios</span><h3 class="mt-1 text-lg font-semibold tracking-tight">Product launches</h3><p class="mt-1 text-sm text-mute">Coordinate every owner and every date in one place.</p></div>
+      </article>
+      <article class="card sol soft rounded-3xl bg-white p-3" data-c="freelance teams">
+        <div class="h-40 rounded-2xl bg-gradient-to-br from-pink-200 via-pink-100 to-violet-100"></div>
+        <div class="p-4"><span class="text-xs font-semibold text-pink-600">Freelancers · Teams</span><h3 class="mt-1 text-lg font-semibold tracking-tight">Content calendar</h3><p class="mt-1 text-sm text-mute">Schedule ideas from first draft to published.</p></div>
+      </article>
+      <article class="card sol soft rounded-3xl bg-white p-3" data-c="studios freelance">
+        <div class="h-40 rounded-2xl bg-gradient-to-br from-violet-200 via-sky-100 to-sky-50"></div>
+        <div class="p-4"><span class="text-xs font-semibold text-violet-600">Studios · Freelancers</span><h3 class="mt-1 text-lg font-semibold tracking-tight">Portfolio showcase</h3><p class="mt-1 text-sm text-mute">Turn finished work into a page worth sharing.</p></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- LEARN -->
+<section id="learn" class="px-5 py-20 sm:py-28">
+  <div class="mx-auto max-w-6xl">
+    <div class="reveal max-w-xl">
+      <p class="text-sm font-semibold text-violet-600">Learn</p>
+      <h2 class="mt-3 font-serif text-4xl tracking-tight sm:text-5xl">Notes on calmer work.</h2>
+    </div>
+    <div class="mt-10 grid gap-4 md:grid-cols-3">
+      <a href="#contact" class="card reveal soft group rounded-3xl p-6 glass" style="--d:0ms"><span class="text-xs font-medium text-mute">5 min read</span><h3 class="mt-3 text-lg font-semibold tracking-tight">How to run a no-meeting Monday</h3><span class="mt-6 inline-flex items-center gap-1 text-sm font-medium text-violet-600">Read <span class="transition group-hover:translate-x-1">→</span></span></a>
+      <a href="#contact" class="card reveal soft group rounded-3xl p-6 glass" style="--d:80ms"><span class="text-xs font-medium text-mute">8 min read</span><h3 class="mt-3 text-lg font-semibold tracking-tight">Owners over assignees: why clarity wins</h3><span class="mt-6 inline-flex items-center gap-1 text-sm font-medium text-violet-600">Read <span class="transition group-hover:translate-x-1">→</span></span></a>
+      <a href="#contact" class="card reveal soft group rounded-3xl p-6 glass" style="--d:160ms"><span class="text-xs font-medium text-mute">4 min read</span><h3 class="mt-3 text-lg font-semibold tracking-tight">A gentle guide to realistic deadlines</h3><span class="mt-6 inline-flex items-center gap-1 text-sm font-medium text-violet-600">Read <span class="transition group-hover:translate-x-1">→</span></span></a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="px-5 pb-20 pt-10 sm:pb-28">
+  <div class="reveal relative mx-auto max-w-4xl overflow-hidden rounded-[32px] bg-ink px-6 py-16 text-center text-white sm:px-12">
+    <div class="blob -right-10 -top-10 h-60 w-60 bg-violet-600"></div>
+    <div class="blob -bottom-16 -left-10 h-60 w-60 bg-pink-500" style="animation-delay:-6s"></div>
+    <div class="relative">
+      <h2 class="font-serif text-4xl tracking-tight sm:text-5xl">Let’s make work feel lighter.</h2>
+      <p class="mx-auto mt-4 max-w-md text-white/70">Leave your email and we’ll be in touch within a day.</p>
+      <form id="contactForm" class="mx-auto mt-8 flex max-w-md flex-col gap-3 sm:flex-row" novalidate>
+        <label class="sr-only" for="email">Email address</label>
+        <input id="email" type="email" required placeholder="you@company.com" class="min-w-0 flex-1 rounded-2xl border border-white/15 bg-white/10 px-5 py-3.5 text-sm text-white placeholder-white/50 backdrop-blur">
+        <button type="submit" class="mag glow rounded-2xl bg-violet-600 px-6 py-3.5 text-sm font-semibold text-white transition">Get in Touch</button>
+      </form>
+      <p id="formMsg" class="mt-4 h-5 text-sm text-violet-200" role="status" aria-live="polite"></p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="border-t border-black/5 px-5 py-8 text-sm text-mute">
+  <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 sm:flex-row">
+    <span class="font-semibold text-ink">TIDY</span>
+    <span>© <span id="yr">2026</span> TIDY. Crafted with care.</span>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  $('#yr').textContent = new Date().getFullYear();
+
+  // Mobile menu
+  var btn = $('#menuBtn'), menu = $('#mobileMenu');
+  function setMenu(open) { menu.classList.toggle('hidden', !open); btn.setAttribute('aria-expanded', String(open)); }
+  btn.addEventListener('click', function () { setMenu(menu.classList.contains('hidden')); });
+  $$('a', menu).forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+
+  // Scroll reveal
+  var items = $$('.reveal');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    items.forEach(function (el) { io.observe(el); });
+  } else { items.forEach(function (el) { el.classList.add('in'); }); }
+
+  // Hero progress tracker
+  var tasks = $$('.task'), bar = $('#bar'), pct = $('#pct');
+  function update() {
+    var done = tasks.filter(function (t) { return t.checked; }).length;
+    var p = Math.round(done / tasks.length * 100);
+    bar.style.width = p + '%';
+    pct.textContent = p + '% done';
+  }
+  tasks.forEach(function (t) { t.addEventListener('change', update); });
+  update();
+
+  // 3D tilt on hero card (fine pointers only)
+  var tilt = $('#tilt');
+  if (!reduce && window.matchMedia('(hover: hover)').matches) {
+    tilt.addEventListener('pointermove', function (e) {
+      var r = tilt.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      tilt.style.transform = 'rotateX(' + (-y * 6).toFixed(2) + 'deg) rotateY(' + (x * 8).toFixed(2) + 'deg)';
+    });
+    tilt.addEventListener('pointerleave', function () { tilt.style.transform = ''; });
+
+    // Magnetic buttons
+    $$('.mag').forEach(function (m) {
+      m.addEventListener('pointermove', function (e) {
+        var r = m.getBoundingClientRect();
+        m.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * 0.2).toFixed(1) + 'px,' + ((e.clientY - r.top - r.height / 2) * 0.3).toFixed(1) + 'px)';
+      });
+      m.addEventListener('pointerleave', function () { m.style.transform = ''; });
+    });
+  }
+
+  // Solutions filter
+  var tabs = $$('#filters button'), cards = $$('.sol');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      var f = t.dataset.f;
+      tabs.forEach(function (o) {
+        var on = o === t;
+        o.setAttribute('aria-selected', String(on));
+        o.className = 'rounded-full px-4 py-2 ' + (on ? 'bg-ink text-white' : 'bg-white text-mute soft');
+      });
+      cards.forEach(function (c) { c.classList.toggle('hide', f !== 'all' && c.dataset.c.split(' ').indexOf(f) === -1); });
+    });
+  });
+
+  // Contact form
+  var form = $('#contactForm'), msg = $('#formMsg'), email = $('#email');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) { msg.textContent = 'Please enter a valid email address.'; email.focus(); return; }
+    msg.textContent = 'Thank you — we’ll be in touch soon.';
+    form.reset();
+  });
+})();
+</script>
+</body>
+</html>
