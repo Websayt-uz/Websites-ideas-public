@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alex Morgan — Frontend Developer</title>
+<meta name="description" content="Portfolio of Alex Morgan, a frontend developer building interfaces people enjoy, with business sense.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+        colors: { ink: '#09090b', panel: '#111114', line: '#26262b', accent: '#f5a524' }
+      }
+    }
+  };
+</script>
+<style>
+  :root { color-scheme: dark; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 5rem); }
+  html, body { background: #09090b; }
+  body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; color: #e4e4e7; -webkit-font-smoothing: antialiased; }
+  .glow { background: radial-gradient(60% 60% at 50% 0%, rgba(245,165,36,.14), transparent 70%); }
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  .card { transition: transform .25s ease-out, border-color .35s ease, box-shadow .35s ease, opacity .7s ease; will-change: transform; }
+  .card:hover { transform: perspective(900px) translateY(-6px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); border-color: rgba(245,165,36,.5); box-shadow: 0 20px 50px -20px rgba(245,165,36,.25); }
+  .card .items-end > i { transform-origin: bottom; transform: scaleY(0); transition: transform .9s cubic-bezier(.2,.8,.2,1); }
+  .card.in .items-end > i { transform: scaleY(1); }
+  .card.in .items-end > i:nth-child(2) { transition-delay: .1s; }
+  .card.in .items-end > i:nth-child(3) { transition-delay: .2s; }
+  .card.in .items-end > i:nth-child(4) { transition-delay: .3s; }
+  .card.in .items-end > i:nth-child(5) { transition-delay: .4s; }
+  @keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes shimmer { to { background-position: 200% center; } }
+  @keyframes pingdot { 0% { transform: scale(1); opacity: .7; } 80%,100% { transform: scale(3); opacity: 0; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(24px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+  .float-y { animation: floaty 6s ease-in-out infinite; }
+  .spin-slow { animation: spin 14s linear infinite; }
+  .shimmer { background-size: 200% auto; animation: shimmer 5s linear infinite; }
+  .pulse-dot { position: relative; }
+  .pulse-dot::after { content: ''; position: absolute; inset: 0; border-radius: 9999px; background: #34d399; animation: pingdot 1.8s cubic-bezier(0,0,.2,1) infinite; }
+  .ring { background: conic-gradient(from 0deg, rgba(245,165,36,.85), transparent 35%, rgba(139,92,246,.65), transparent 75%, rgba(245,165,36,.85)); -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px)); mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 calc(100% - 1px)); }
+  #top .reveal:first-child > * { animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
+  #top .reveal:first-child > *:nth-child(2) { animation-delay: .12s; }
+  #top .reveal:first-child > *:nth-child(3) { animation-delay: .24s; }
+  #top .reveal:first-child > *:nth-child(4) { animation-delay: .36s; }
+  .card:hover .mock { transform: scale(1.04); }
+  .mock { transition: transform .5s ease; }
+  .nav-link[aria-current="true"] { color: #fff; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+    .card, .mock { transition: none; }
+    html { scroll-behavior: auto !important; }
+    .float-y, .spin-slow, .shimmer, .pulse-dot::after, #top .reveal:first-child > * { animation: none !important; }
+    .card .items-end > i { transform: none; transition: none; }
+  }
+</style>
+</head>
+<body class="bg-ink font-sans antialiased">
+
+<div id="progress" aria-hidden="true" class="fixed left-0 z-[70] h-0.5 w-full origin-left bg-accent" style="top: env(safe-area-inset-top, 0px); transform: scaleX(0)"></div>
+
+<a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-md focus:bg-accent focus:px-3 focus:py-2 focus:text-black">Skip to content</a>
+
+<header id="header" class="sticky z-50 border-b border-transparent transition-colors duration-300" style="top: env(safe-area-inset-top, 0px)">
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-5 sm:px-8">
+    <a href="#top" class="text-base font-semibold tracking-tight text-white">Alex Morgan<span class="text-accent">.</span></a>
+    <nav aria-label="Primary" class="hidden items-center gap-8 text-sm text-zinc-400 md:flex">
+      <a class="nav-link transition hover:text-white" href="#work">Work</a>
+      <a class="nav-link transition hover:text-white" href="#about">About</a>
+      <a class="nav-link transition hover:text-white" href="#contact">Contact</a>
+    </nav>
+    <button id="menuBtn" type="button" class="inline-flex h-10 w-10 items-center justify-center rounded-md border border-line text-zinc-300 md:hidden" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileMenu">
+      <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path id="menuIcon" d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+  <div id="mobileMenu" class="hidden border-t border-line bg-ink/95 backdrop-blur md:hidden">
+    <nav aria-label="Mobile" class="mx-auto flex max-w-6xl flex-col px-5 py-3 text-zinc-300 sm:px-8">
+      <a class="py-3" href="#work">Work</a>
+      <a class="py-3" href="#about">About</a>
+      <a class="py-3" href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <!-- Hero -->
+  <section id="top" class="glow relative overflow-hidden">
+    <div id="spot" aria-hidden="true" class="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500" style="background: radial-gradient(500px circle at var(--mx, 50%) var(--my, 30%), rgba(245,165,36,.12), transparent 60%)"></div>
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-16 sm:px-8 md:grid-cols-[1.4fr_1fr] md:pb-28 md:pt-24">
+      <div class="reveal">
+        <p class="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-panel px-3 py-1 text-xs text-zinc-400">
+          <span class="pulse-dot h-1.5 w-1.5 rounded-full bg-emerald-400"></span> Available for new projects
+        </p>
+        <h1 class="text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+          Interfaces people enjoy, <span class="shimmer bg-gradient-to-r from-amber-300 via-accent to-amber-300 bg-clip-text text-transparent">built with business sense.</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-base leading-relaxed text-zinc-400 sm:text-lg">
+          I’m a frontend developer who turns product goals into fast, accessible, good-looking web apps — so your users stay longer and your team ships with confidence.
+        </p>
+        <div class="mt-9 flex flex-wrap items-center gap-4">
+          <a href="#contact" class="rounded-lg bg-accent px-6 py-3 text-sm font-semibold text-black transition hover:-translate-y-0.5 hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-ink">Get in touch</a>
+          <a href="#work" class="text-sm font-medium text-zinc-300 transition hover:text-white">See selected work →</a>
+        </div>
+      </div>
+      <div class="reveal mx-auto" style="transition-delay:.15s">
+        <div class="float-y relative h-56 w-56 sm:h-72 sm:w-72">
+          <div class="absolute -inset-3 rounded-full bg-gradient-to-tr from-accent/40 via-violet-500/20 to-transparent blur-2xl"></div>
+          <div class="ring spin-slow absolute -inset-2 rounded-full" aria-hidden="true"></div>
+          <div class="relative flex h-full w-full items-center justify-center overflow-hidden rounded-full border border-line bg-gradient-to-br from-zinc-800 to-zinc-950" role="img" aria-label="Profile photo placeholder">
+            <svg class="h-2/3 w-2/3 text-zinc-600" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <section aria-label="Highlights" class="border-y border-line bg-panel/60">
+    <dl class="mx-auto grid max-w-6xl grid-cols-1 divide-y divide-line px-5 sm:grid-cols-3 sm:divide-x sm:divide-y-0 sm:px-8">
+      <div class="reveal py-8 text-center sm:px-6">
+        <dd class="text-4xl font-bold text-white"><span data-count="8">8</span><span class="text-accent">+</span></dd>
+        <dt class="mt-1 text-sm text-zinc-400">Years of experience</dt>
+      </div>
+      <div class="reveal py-8 text-center sm:px-6" style="transition-delay:.1s">
+        <dd class="text-4xl font-bold text-white"><span data-count="60">60</span><span class="text-accent">+</span></dd>
+        <dt class="mt-1 text-sm text-zinc-400">Projects completed</dt>
+      </div>
+      <div class="reveal py-8 text-center sm:px-6" style="transition-delay:.2s">
+        <dd class="text-4xl font-bold text-white"><span data-count="98">98</span><span class="text-accent">%</span></dd>
+        <dt class="mt-1 text-sm text-zinc-400">Client satisfaction</dt>
+      </div>
+    </dl>
+  </section>
+
+  <!-- Work -->
+  <section id="work" class="mx-auto max-w-6xl px-5 py-20 sm:px-8 md:py-28">
+    <div class="reveal mb-12 flex flex-col justify-between gap-3 sm:flex-row sm:items-end">
+      <div>
+        <p class="text-sm font-medium text-accent">Selected work</p>
+        <h2 class="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">Recent projects</h2>
+      </div>
+      <p class="max-w-sm text-sm text-zinc-400">A few products where design and engineering decisions moved real numbers.</p>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <article class="card reveal group overflow-hidden rounded-2xl border border-line bg-panel">
+        <div class="overflow-hidden border-b border-line bg-gradient-to-br from-amber-500/20 to-zinc-900 p-5">
+          <div class="mock rounded-lg border border-line bg-ink p-3" role="img" aria-label="Dashboard mockup placeholder">
+            <div class="mb-3 flex gap-1.5"><i class="h-2 w-2 rounded-full bg-zinc-700"></i><i class="h-2 w-2 rounded-full bg-zinc-700"></i><i class="h-2 w-2 rounded-full bg-zinc-700"></i></div>
+            <div class="grid grid-cols-3 gap-2"><i class="h-8 rounded bg-accent/30"></i><i class="h-8 rounded bg-zinc-800"></i><i class="h-8 rounded bg-zinc-800"></i></div>
+            <div class="mt-2 flex h-14 items-end gap-1.5"><i class="w-full rounded-t bg-zinc-800" style="height:40%"></i><i class="w-full rounded-t bg-zinc-800" style="height:65%"></i><i class="w-full rounded-t bg-accent/60" style="height:90%"></i><i class="w-full rounded-t bg-zinc-800" style="height:55%"></i><i class="w-full rounded-t bg-zinc-800" style="height:75%"></i></div>
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-white">Analytics Dashboard</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-400">A real-time reporting suite that cut weekly reporting time for a 40-person sales team by half.</p>
+          <ul class="mt-5 flex flex-wrap gap-2" aria-label="Technologies">
+            <li class="rounded-full border border-line px-3 py-1 text-xs text-zinc-300">React</li>
+            <li class="rounded-full border border-line px-3 py-1 text-xs text-zinc-300">Tailwind</li>
+            <li class="rounded-full border border-line px-3 py-1 text-xs text-zinc-300">Node.js</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card reveal group overflow-hidden rounded-2xl border border-line bg-panel" style="transition-delay:.1s">
+        <div class="overflow-hidden border-b border-line bg-gradient-to-br from-violet-500/20 to-zinc-900 p-5">
+          <div class="mock rounded-lg border border-line bg-ink p-3" role="img" aria-label="Storefront mockup placeholder">
+            <div class="mb-3 flex gap-1.5"><i class="h-2 w-2 rounded-full bg-zinc-700"></i><i class="h-2 w-2 rounded-full bg-zinc-700"></i><i class="h-2 w-2 rounded-full bg-zinc-700"></i></div>
+            <div class="grid grid-cols-3 gap-2"><i class="h-16 rounded bg-violet-400/30"></i><i class="h-16 rounded bg-zinc-800"></i><i class="h-16 rounded bg-zinc-800"></i></div>
+            <i class="mt-2 block h-2 w-2/3 rounded bg-zinc-800"></i>
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-white">Storefront Redesign</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-400">A faster, simpler checkout flow for a boutique retailer that lifted conversion by 24%.</p>
+          <ul class="mt-5 flex flex-wrap gap-2" aria-label="Technologies">
+            <li class="rounded-full border border-line px-3 py-1 text-xs text-zinc-300">Next.js</li>
+            <li class="rounded-full border border-line px-3 py-1 text-xs text-zinc-300">Stripe</li>
+            <li class="rounded-full border border-line px-3 py-1 text-xs text-zinc-300">Tailwind</li>
+          </ul>
+        </div>
+      </article>
+
+      <article class="card reveal group overflow-hidden rounded-2xl border border-line bg-panel sm:col-span-2 lg:col-span-1" style="transition-delay:.2s">
+        <div class="overflow-hidden border-b border-line bg-gradient-to-br from-emerald-500/15 to-zinc-900 p-5">
+          <div class="mock rounded-lg border border-line bg-ink p-3" role="img" aria-label="Mobile app mockup placeholder">
+            <div class="mb-3 flex gap-1.5"><i class="h-2 w-2 rounded-full bg-zinc-700"></i><i class="h-2 w-2 rounded-full bg-zinc-700"></i><i class="h-2 w-2 rounded-full bg-zinc-700"></i></div>
+            <div class="space-y-2"><i class="block h-5 rounded bg-emerald-400/30"></i><i class="block h-5 rounded bg-zinc-800"></i><i class="block h-5 w-4/5 rounded bg-zinc-800"></i><i class="block h-5 w-3/5 rounded bg-zinc-800"></i></div>
+          </div>
+        </div>
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-white">Team Planner App</h3>
+          <p class="mt-2 text-sm leading-relaxed text-zinc-400">A collaborative planning tool with live sync, adopted across three departments in the first quarter.</p>
+          <ul class="mt-5 flex flex-wrap gap-2" aria-label="Technologies">
+            <li class="rounded-full border border-line px-3 py-1 text-xs text-zinc-300">React</li>
+            <li class="rounded-full border border-line px-3 py-1 text-xs text-zinc-300">TypeScript</li>
+            <li class="rounded-full border border-line px-3 py-1 text-xs text-zinc-300">Node.js</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="border-t border-line bg-panel/40">
+    <div class="reveal mx-auto grid max-w-6xl gap-8 px-5 py-20 sm:px-8 md:grid-cols-[1fr_1.6fr] md:py-24">
+      <div>
+        <p class="text-sm font-medium text-accent">About</p>
+        <h2 class="mt-2 text-3xl font-bold tracking-tight text-white">Design-minded, outcome-driven.</h2>
+      </div>
+      <div class="space-y-4 text-base leading-relaxed text-zinc-400">
+        <p>I help startups and growing teams ship polished web products. I care about the details users feel — speed, clarity, motion — and the numbers the business watches.</p>
+        <p>My toolkit leans on React, TypeScript, Tailwind and Node.js, but I pick tools to fit the problem, not the other way round.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="mx-auto max-w-6xl px-5 py-20 text-center sm:px-8 md:py-28">
+    <div class="reveal">
+      <h2 class="text-3xl font-bold tracking-tight text-white sm:text-5xl">Let’s build something good.</h2>
+      <p class="mx-auto mt-4 max-w-md text-zinc-400">Have a project in mind? Send a note and I’ll reply within two working days.</p>
+      <a href="mailto:hello@example.com" class="mt-8 inline-block rounded-lg bg-accent px-7 py-3 text-sm font-semibold text-black transition hover:-translate-y-0.5 hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-300 focus-visible:ring-offset-2 focus-visible:ring-offset-ink">hello@example.com</a>
+    </div>
+  </section>
+</main>
+
+<footer class="border-t border-line">
+  <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-sm text-zinc-500 sm:flex-row sm:px-8">
+    <p>© <span id="year">2026</span> Alex Morgan. All rights reserved.</p>
+    <p>Designed &amp; built with care.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var header = document.getElementById('header');
+  var btn = document.getElementById('menuBtn');
+  var menu = document.getElementById('mobileMenu');
+  var icon = document.getElementById('menuIcon');
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  function setMenu(open) {
+    menu.classList.toggle('hidden', !open);
+    btn.setAttribute('aria-expanded', String(open));
+    icon.setAttribute('d', open ? 'M6 6l12 12M18 6L6 18' : 'M4 7h16M4 12h16M4 17h16');
+  }
+  btn.addEventListener('click', function () { setMenu(btn.getAttribute('aria-expanded') !== 'true'); });
+  menu.addEventListener('click', function (e) { if (e.target.tagName === 'A') setMenu(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
+
+  function onScroll() {
+    var scrolled = window.scrollY > 8;
+    header.classList.toggle('bg-ink/80', scrolled);
+    header.classList.toggle('backdrop-blur-md', scrolled);
+    header.classList.toggle('border-line', scrolled);
+    header.classList.toggle('border-transparent', !scrolled);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var items = document.querySelectorAll('.reveal');
+
+  function countUp(el) {
+    var target = parseInt(el.getAttribute('data-count'), 10);
+    if (reduce || isNaN(target)) { el.textContent = target; return; }
+    var start = null, dur = 1200;
+    function step(ts) {
+      if (start === null) start = ts;
+      var p = Math.min((ts - start) / dur, 1);
+      el.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    el.textContent = 0;
+    requestAnimationFrame(step);
+  }
+
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        en.target.classList.add('in');
+        en.target.querySelectorAll('[data-count]').forEach(countUp);
+        io.unobserve(en.target);
+      });
+    }, { threshold: 0.15 });
+    items.forEach(function (el) { io.observe(el); });
+  } else {
+    items.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  var progress = document.getElementById('progress');
+  window.addEventListener('scroll', function () {
+    var max = document.documentElement.scrollHeight - window.innerHeight;
+    progress.style.transform = 'scaleX(' + (max > 0 ? Math.min(window.scrollY / max, 1) : 0) + ')';
+  }, { passive: true });
+
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (fine && !reduce) {
+    var hero = document.getElementById('top');
+    var spot = document.getElementById('spot');
+    hero.addEventListener('pointermove', function (e) {
+      var r = hero.getBoundingClientRect();
+      spot.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      spot.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      spot.style.opacity = '1';
+    });
+    hero.addEventListener('pointerleave', function () { spot.style.opacity = '0'; });
+
+    document.querySelectorAll('.card').forEach(function (card) {
+      card.addEventListener('pointermove', function (e) {
+        var r = card.getBoundingClientRect();
+        var x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+        card.style.setProperty('--ry', ((x - 0.5) * 8).toFixed(2) + 'deg');
+        card.style.setProperty('--rx', ((0.5 - y) * 8).toFixed(2) + 'deg');
+      });
+      card.addEventListener('pointerleave', function () {
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+      });
+    });
+
+    document.querySelectorAll('main a.rounded-lg').forEach(function (b) {
+      b.addEventListener('pointermove', function (e) {
+        var r = b.getBoundingClientRect();
+        var dx = (e.clientX - (r.left + r.width / 2)) * 0.25;
+        var dy = (e.clientY - (r.top + r.height / 2)) * 0.35;
+        b.style.transform = 'translate(' + dx.toFixed(1) + 'px,' + dy.toFixed(1) + 'px)';
+      });
+      b.addEventListener('pointerleave', function () { b.style.transform = ''; });
+    });
+  }
+
+  var links = document.querySelectorAll('.nav-link');
+  var sections = ['work', 'about', 'contact'].map(function (id) { return document.getElementById(id); });
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY + 140, current = null;
+    sections.forEach(function (s) { if (s && s.offsetTop <= y) current = s.id; });
+    links.forEach(function (a) {
+      a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + current));
+    });
+  }, { passive: true });
+})();
+</script>
+</body>
+</html>
