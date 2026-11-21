@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Alex Rivera — Creative Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { display: ['"Space Grotesk"', 'system-ui', 'sans-serif'], mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'] },
+  colors: { obsidian: '#07070b', ink: '#0d0d14' }
+}}};
+</script>
+<style>
+:root { color-scheme: dark; --violet:#a855f7; --cyan:#22d3ee; --pink:#ec4899; --bg:#07070b; --text:#e8e8f0; --muted:#9a9ab0;
+  box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 84px); background: var(--bg); }
+body { background: var(--bg); color: var(--text); font-family: 'Space Grotesk', system-ui, sans-serif; overflow-x: hidden; }
+body::before { content:""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 60; background: var(--bg); }
+::selection { background: rgba(168,85,247,.45); }
+/* custom scrollbar */
+::-webkit-scrollbar { width: 10px; } ::-webkit-scrollbar-track { background: #0a0a10; }
+::-webkit-scrollbar-thumb { background: linear-gradient(var(--violet), var(--cyan)); border-radius: 8px; border: 2px solid #0a0a10; }
+html { scrollbar-color: #7c3aed #0a0a10; }
+/* film grain + grid */
+.grid-bg { background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 56px 56px; mask-image: radial-gradient(ellipse at 50% 30%, #000 20%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse at 50% 30%, #000 20%, transparent 75%); }
+/* blobs */
+.blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .55; will-change: transform; }
+.b1 { width: 460px; height: 460px; background: var(--violet); top: -80px; left: -100px; animation: drift1 18s ease-in-out infinite alternate; }
+.b2 { width: 400px; height: 400px; background: var(--cyan); top: 120px; right: -120px; opacity:.4; animation: drift2 22s ease-in-out infinite alternate; }
+.b3 { width: 360px; height: 360px; background: var(--pink); bottom: -100px; left: 35%; opacity:.35; animation: drift3 20s ease-in-out infinite alternate; }
+@keyframes drift1 { to { transform: translate(120px, 90px) scale(1.15); } }
+@keyframes drift2 { to { transform: translate(-140px, 70px) scale(.9); } }
+@keyframes drift3 { to { transform: translate(90px, -80px) scale(1.2); } }
+/* gradient text */
+.grad { background: linear-gradient(100deg, var(--violet), var(--cyan) 50%, var(--pink)); background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 6s linear infinite; }
+@keyframes shine { to { background-position: 200% center; } }
+/* glass + glowing logo */
+.glass { background: rgba(13,13,20,.6); backdrop-filter: blur(16px) saturate(140%); -webkit-backdrop-filter: blur(16px) saturate(140%); border: 1px solid rgba(255,255,255,.08); }
+.logo-glow { text-shadow: 0 0 12px rgba(168,85,247,.9), 0 0 28px rgba(34,211,238,.5); animation: pulse 3s ease-in-out infinite; }
+@keyframes pulse { 50% { text-shadow: 0 0 18px rgba(236,72,153,.9), 0 0 36px rgba(168,85,247,.6); } }
+/* nav underline */
+.nav-link { position: relative; padding: 4px 0; color: var(--muted); transition: color .3s; }
+.nav-link::after { content:""; position:absolute; left:0; bottom:-2px; height:2px; width:100%; background: linear-gradient(90deg, var(--violet), var(--cyan)); transform: scaleX(0); transform-origin: right; transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.nav-link:hover, .nav-link.active { color:#fff; } .nav-link:hover::after, .nav-link.active::after { transform: scaleX(1); transform-origin: left; }
+/* caret */
+.caret { display:inline-block; width:3px; height:.95em; background: var(--cyan); margin-left:4px; vertical-align:-0.1em; animation: blink 1s steps(1) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+/* floating badges */
+.float { animation: bob 6s ease-in-out infinite; } .float.d2 { animation-delay: -2s; animation-duration: 7s; } .float.d3 { animation-delay: -4s; animation-duration: 8s; }
+@keyframes bob { 50% { transform: translateY(-14px) rotate(2deg); } }
+/* cards: tilt + spotlight border glow */
+.tilt { transform-style: preserve-3d; transition: transform .25s ease-out, box-shadow .3s; position: relative; will-change: transform; }
+.tilt:hover { box-shadow: 0 25px 60px -20px rgba(168,85,247,.45); }
+.tilt::before { content:""; position:absolute; inset:-1px; border-radius:inherit; padding:1px; background: radial-gradient(260px circle at var(--mx,50%) var(--my,50%), var(--cyan), var(--violet) 40%, transparent 70%); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .3s; pointer-events:none; }
+.tilt:hover::before { opacity: 1; }
+.tilt::after { content:""; position:absolute; inset:0; border-radius:inherit; background: radial-gradient(300px circle at var(--mx,50%) var(--my,50%), rgba(168,85,247,.14), transparent 60%); opacity:0; transition: opacity .3s; pointer-events:none; }
+.tilt:hover::after { opacity:1; }
+/* projects */
+.proj .art { transition: transform .8s cubic-bezier(.2,.8,.2,1); } .proj:hover .art { transform: scale(1.12); }
+.proj .over { transform: translateY(101%); transition: transform .5s cubic-bezier(.2,.8,.2,1); } .proj:hover .over, .proj:focus-within .over { transform: translateY(0); }
+@media (hover: none) { .proj .over { transform: translateY(0); background: linear-gradient(transparent, rgba(7,7,11,.95) 45%); } }
+/* cursor */
+#cursor { position: fixed; top:0; left:0; width: 34px; height: 34px; margin:-17px 0 0 -17px; border-radius:50%; border:1px solid rgba(34,211,238,.7); pointer-events:none; z-index:100; mix-blend-mode: screen; transition: width .25s, height .25s, margin .25s, background .25s; opacity:0; }
+#cursor.big { width: 64px; height: 64px; margin:-32px 0 0 -32px; background: rgba(168,85,247,.18); }
+@media (hover: none) { #cursor { display:none; } }
+/* reveal (only hidden when JS is running) */
+.js .reveal { opacity: 0; }
+#progress { position: fixed; top: env(safe-area-inset-top, 0px); left:0; height:3px; width:100%; z-index: 70; transform-origin:left; transform: scaleX(0); background: linear-gradient(90deg, var(--violet), var(--cyan), var(--pink)); }
+.btn { position: relative; display:inline-flex; align-items:center; gap:.5rem; transition: transform .2s ease-out, box-shadow .3s; }
+.skill-bar > i { display:block; height:100%; border-radius:inherit; background: linear-gradient(90deg, var(--violet), var(--cyan)); width:0; transition: width 1.4s cubic-bezier(.2,.8,.2,1); }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; } .js .reveal { opacity: 1 !important; } html { scroll-behavior: auto !important; } }
+</style>
+</head>
+<body class="font-display antialiased">
+<div id="progress" aria-hidden="true"></div>
+<div id="cursor" aria-hidden="true"></div>
+
+<!-- NAV -->
+<header class="fixed left-0 right-0 z-50 px-3 sm:px-6" style="top: calc(env(safe-area-inset-top, 0px) + 12px)">
+  <nav class="glass mx-auto flex max-w-6xl items-center justify-between rounded-2xl px-5 py-3" aria-label="Primary">
+    <a href="#home" class="logo-glow font-mono text-lg font-medium tracking-tight text-white">&lt;alex<span class="text-cyan-300">/&gt;</span></a>
+    <ul class="hidden items-center gap-8 text-sm md:flex">
+      <li><a class="nav-link" href="#home">Home</a></li>
+      <li><a class="nav-link" href="#skills">Skills</a></li>
+      <li><a class="nav-link" href="#work">Work</a></li>
+      <li><a class="nav-link" href="#contact">Contact</a></li>
+    </ul>
+    <button id="menuBtn" class="md:hidden rounded-lg p-1.5 text-white" aria-label="Toggle menu" aria-expanded="false"><i data-lucide="menu"></i></button>
+  </nav>
+  <div id="mobileMenu" class="glass mx-auto mt-2 hidden max-w-6xl flex-col gap-4 rounded-2xl px-5 py-4 text-sm md:hidden">
+    <a class="nav-link w-fit" href="#home">Home</a><a class="nav-link w-fit" href="#skills">Skills</a><a class="nav-link w-fit" href="#work">Work</a><a class="nav-link w-fit" href="#contact">Contact</a>
+  </div>
+</header>
+
+<main>
+<!-- HERO -->
+<section id="home" class="relative flex min-h-screen items-center overflow-hidden px-5 pt-28 pb-16 sm:px-8">
+  <div class="blob b1" aria-hidden="true"></div><div class="blob b2" aria-hidden="true"></div><div class="blob b3" aria-hidden="true"></div>
+  <div class="grid-bg absolute inset-0" aria-hidden="true"></div>
+  <div class="relative mx-auto grid w-full max-w-6xl items-center gap-12 lg:grid-cols-[1.3fr_1fr]">
+    <div>
+      <p class="hero-in glass mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-mono text-xs text-cyan-200"><span class="relative flex h-2 w-2"><span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400"></span></span>Available for new projects</p>
+      <h1 class="text-5xl font-bold leading-[1.02] tracking-tighter sm:text-7xl lg:text-8xl" aria-label="Hi, I’m Alex Rivera">
+        <span class="split block overflow-hidden">Hi, I’m</span>
+        <span class="split grad block overflow-hidden pb-2">Alex Rivera</span>
+      </h1>
+      <p class="hero-in mt-6 font-mono text-xl text-white sm:text-2xl">I’m a <span id="typed" class="text-cyan-300"></span><span class="caret" aria-hidden="true"></span></p>
+      <p class="hero-in mt-5 max-w-xl text-base leading-relaxed text-[var(--muted)] sm:text-lg">I craft fast, expressive interfaces where motion, design and intelligent systems meet — from pixel-level polish to production-grade code.</p>
+      <div class="hero-in mt-9 flex flex-wrap gap-4">
+        <a href="#work" data-magnet class="btn rounded-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-400 px-7 py-3.5 font-medium text-white shadow-[0_0_35px_-5px_rgba(168,85,247,.8)] hover:shadow-[0_0_50px_0_rgba(34,211,238,.6)]">View my work <i data-lucide="arrow-up-right" class="h-4 w-4"></i></a>
+        <a href="#contact" data-magnet class="btn glass rounded-full px-7 py-3.5 font-medium text-white hover:border-cyan-300/50">Let’s talk <i data-lucide="send" class="h-4 w-4"></i></a>
+      </div>
+    </div>
+    <div class="relative mx-auto hidden h-80 w-full max-w-sm lg:block" aria-hidden="true">
+      <div class="float glass absolute left-0 top-4 flex items-center gap-2 rounded-2xl px-4 py-3 text-sm"><i data-lucide="code-2" class="h-5 w-5 text-violet-300"></i>React &amp; TypeScript</div>
+      <div class="float d2 glass absolute right-0 top-24 flex items-center gap-2 rounded-2xl px-4 py-3 text-sm"><i data-lucide="figma" class="h-5 w-5 text-pink-300"></i>Design Systems</div>
+      <div class="float d3 glass absolute bottom-6 left-10 flex items-center gap-2 rounded-2xl px-4 py-3 text-sm"><i data-lucide="sparkles" class="h-5 w-5 text-cyan-300"></i>AI Experiments</div>
+      <div class="absolute inset-x-12 top-16 -z-10 h-56 rounded-full bg-gradient-to-tr from-violet-600/30 to-cyan-400/20 blur-2xl"></div>
+    </div>
+  </div>
+  <a href="#skills" class="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 hover:text-white" aria-label="Scroll to skills"><i data-lucide="chevrons-down" class="animate-bounce"></i></a>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="relative px-5 py-24 sm:px-8">
+  <div class="mx-auto max-w-6xl">
+    <p class="reveal font-mono text-sm text-cyan-300">// what I do</p>
+    <h2 class="reveal mt-2 text-4xl font-bold tracking-tight sm:text-5xl">Skills &amp; <span class="grad">Services</span></h2>
+    <div class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3" style="perspective:1000px">
+      <article class="tilt reveal rounded-3xl border border-white/10 bg-ink/80 p-7 transition-transform duration-300 hover:scale-105" data-level="95">
+        <div class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-violet-500/15 text-violet-300"><i data-lucide="layout-dashboard"></i></div>
+        <h3 class="text-xl font-bold">Frontend Engineering</h3><p class="mt-2 text-sm leading-relaxed text-[var(--muted)]">Accessible, performant apps with React, Next.js and modern CSS — built to scale.</p>
+        <div class="skill-bar mt-5 h-1.5 overflow-hidden rounded-full bg-white/10"><i></i></div>
+      </article>
+      <article class="tilt reveal rounded-3xl border border-white/10 bg-ink/80 p-7 transition-transform duration-300 hover:scale-105" data-level="90">
+        <div class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-pink-500/15 text-pink-300"><i data-lucide="pen-tool"></i></div>
+        <h3 class="text-xl font-bold">UI/UX Design</h3><p class="mt-2 text-sm leading-relaxed text-[var(--muted)]">Research-led flows, wireframes and polished visual systems that feel inevitable.</p>
+        <div class="skill-bar mt-5 h-1.5 overflow-hidden rounded-full bg-white/10"><i></i></div>
+      </article>
+      <article class="tilt reveal rounded-3xl border border-white/10 bg-ink/80 p-7 transition-transform duration-300 hover:scale-105" data-level="88">
+        <div class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-cyan-500/15 text-cyan-300"><i data-lucide="wand-sparkles"></i></div>
+        <h3 class="text-xl font-bold">Motion &amp; Interaction</h3><p class="mt-2 text-sm leading-relaxed text-[var(--muted)]">GSAP timelines, scroll choreography and micro-interactions at a steady 60fps.</p>
+        <div class="skill-bar mt-5 h-1.5 overflow-hidden rounded-full bg-white/10"><i></i></div>
+      </article>
+      <article class="tilt reveal rounded-3xl border border-white/10 bg-ink/80 p-7 transition-transform duration-300 hover:scale-105" data-level="82">
+        <div class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-fuchsia-500/15 text-fuchsia-300"><i data-lucide="brain-circuit"></i></div>
+        <h3 class="text-xl font-bold">AI Integration</h3><p class="mt-2 text-sm leading-relaxed text-[var(--muted)]">LLM-powered features, copilots and smart search wired into real product workflows.</p>
+        <div class="skill-bar mt-5 h-1.5 overflow-hidden rounded-full bg-white/10"><i></i></div>
+      </article>
+      <article class="tilt reveal rounded-3xl border border-white/10 bg-ink/80 p-7 transition-transform duration-300 hover:scale-105" data-level="85">
+        <div class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-emerald-500/15 text-emerald-300"><i data-lucide="server"></i></div>
+        <h3 class="text-xl font-bold">Backend &amp; APIs</h3><p class="mt-2 text-sm leading-relaxed text-[var(--muted)]">Node, Postgres and edge functions — clean APIs and data models that stay fast.</p>
+        <div class="skill-bar mt-5 h-1.5 overflow-hidden rounded-full bg-white/10"><i></i></div>
+      </article>
+      <article class="tilt reveal rounded-3xl border border-white/10 bg-ink/80 p-7 transition-transform duration-300 hover:scale-105" data-level="78">
+        <div class="mb-5 grid h-12 w-12 place-items-center rounded-2xl bg-amber-500/15 text-amber-300"><i data-lucide="box"></i></div>
+        <h3 class="text-xl font-bold">3D &amp; Creative Coding</h3><p class="mt-2 text-sm leading-relaxed text-[var(--muted)]">Three.js scenes, shaders and generative visuals for immersive brand moments.</p>
+        <div class="skill-bar mt-5 h-1.5 overflow-hidden rounded-full bg-white/10"><i></i></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work" class="relative px-5 py-24 sm:px-8">
+  <div class="mx-auto max-w-6xl">
+    <p class="reveal font-mono text-sm text-cyan-300">// selected projects</p>
+    <h2 class="reveal mt-2 text-4xl font-bold tracking-tight sm:text-5xl">Featured <span class="grad">Work</span></h2>
+    <div class="mt-12 grid gap-6 md:grid-cols-2">
+      <!-- Project cards -->
+      <article class="proj reveal group relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/10" tabindex="0">
+        <svg class="art absolute inset-0 h-full w-full" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4c1d95"/><stop offset="1" stop-color="#0e7490"/></linearGradient></defs><rect width="400" height="300" fill="url(#g1)"/><g fill="none" stroke="#fff" stroke-opacity=".35"><circle cx="200" cy="150" r="40"/><circle cx="200" cy="150" r="80"/><circle cx="200" cy="150" r="120"/></g><circle cx="200" cy="150" r="14" fill="#22d3ee"/><circle cx="280" cy="110" r="7" fill="#ec4899"/><circle cx="130" cy="200" r="9" fill="#a855f7"/></svg>
+        <div class="over absolute inset-x-0 bottom-0 p-6"><div class="glass rounded-2xl p-5"><h3 class="text-xl font-bold">Orbit Analytics</h3><p class="mt-1 text-sm text-[var(--muted)]">Real-time dashboard with live-streaming charts and an AI insight assistant.</p><div class="mt-3 flex flex-wrap gap-2 font-mono text-xs"><span class="rounded-full bg-violet-500/20 px-3 py-1 text-violet-200">React</span><span class="rounded-full bg-cyan-500/20 px-3 py-1 text-cyan-200">D3</span><span class="rounded-full bg-pink-500/20 px-3 py-1 text-pink-200">AI</span></div></div></div>
+      </article>
+      <article class="proj reveal group relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/10" tabindex="0">
+        <svg class="art absolute inset-0 h-full w-full" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="g2" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#831843"/><stop offset="1" stop-color="#6d28d9"/></linearGradient></defs><rect width="400" height="300" fill="url(#g2)"/><g fill="#fff" fill-opacity=".14"><rect x="50" y="60" width="130" height="90" rx="14"/><rect x="200" y="90" width="150" height="130" rx="14"/><rect x="70" y="170" width="110" height="70" rx="14"/></g><rect x="62" y="74" width="60" height="8" rx="4" fill="#f9a8d4"/><rect x="214" y="104" width="80" height="8" rx="4" fill="#67e8f9"/></svg>
+        <div class="over absolute inset-x-0 bottom-0 p-6"><div class="glass rounded-2xl p-5"><h3 class="text-xl font-bold">Lumen Design System</h3><p class="mt-1 text-sm text-[var(--muted)]">A token-driven component library powering 12 products with dark and light themes.</p><div class="mt-3 flex flex-wrap gap-2 font-mono text-xs"><span class="rounded-full bg-pink-500/20 px-3 py-1 text-pink-200">Figma</span><span class="rounded-full bg-violet-500/20 px-3 py-1 text-violet-200">Storybook</span><span class="rounded-full bg-cyan-500/20 px-3 py-1 text-cyan-200">Tailwind</span></div></div></div>
+      </article>
+      <article class="proj reveal group relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/10" tabindex="0">
+        <svg class="art absolute inset-0 h-full w-full" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#083344"/><stop offset="1" stop-color="#7e22ce"/></linearGradient></defs><rect width="400" height="300" fill="url(#g3)"/><path d="M0 200 C60 120 120 260 200 170 S340 110 400 190" fill="none" stroke="#22d3ee" stroke-width="3"/><path d="M0 230 C70 160 130 280 210 200 S340 150 400 220" fill="none" stroke="#ec4899" stroke-width="3" stroke-opacity=".8"/><path d="M0 170 C60 90 130 220 200 130 S330 70 400 150" fill="none" stroke="#a855f7" stroke-width="3" stroke-opacity=".8"/></svg>
+        <div class="over absolute inset-x-0 bottom-0 p-6"><div class="glass rounded-2xl p-5"><h3 class="text-xl font-bold">Wavelength</h3><p class="mt-1 text-sm text-[var(--muted)]">Interactive audio visualizer that turns any track into generative waveforms.</p><div class="mt-3 flex flex-wrap gap-2 font-mono text-xs"><span class="rounded-full bg-cyan-500/20 px-3 py-1 text-cyan-200">Web Audio</span><span class="rounded-full bg-violet-500/20 px-3 py-1 text-violet-200">Canvas</span><span class="rounded-full bg-pink-500/20 px-3 py-1 text-pink-200">GSAP</span></div></div></div>
+      </article>
+      <article class="proj reveal group relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/10" tabindex="0">
+        <svg class="art absolute inset-0 h-full w-full" viewBox="0 0 400 300" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="g4" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#be185d"/><stop offset="1" stop-color="#0891b2"/></linearGradient></defs><rect width="400" height="300" fill="url(#g4)"/><g fill="#fff" fill-opacity=".2"><polygon points="200,50 290,100 290,200 200,250 110,200 110,100"/></g><polygon points="200,90 255,120 255,180 200,210 145,180 145,120" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2"/><circle cx="200" cy="150" r="10" fill="#fff"/></svg>
+        <div class="over absolute inset-x-0 bottom-0 p-6"><div class="glass rounded-2xl p-5"><h3 class="text-xl font-bold">Nova Commerce</h3><p class="mt-1 text-sm text-[var(--muted)]">Headless storefront with 3D product viewer and sub-second page loads.</p><div class="mt-3 flex flex-wrap gap-2 font-mono text-xs"><span class="rounded-full bg-pink-500/20 px-3 py-1 text-pink-200">Next.js</span><span class="rounded-full bg-cyan-500/20 px-3 py-1 text-cyan-200">Three.js</span><span class="rounded-full bg-violet-500/20 px-3 py-1 text-violet-200">Stripe</span></div></div></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="relative overflow-hidden px-5 py-28 sm:px-8">
+  <div class="blob b1" style="top:auto;bottom:-200px;left:10%;opacity:.3" aria-hidden="true"></div>
+  <div class="relative mx-auto max-w-3xl text-center">
+    <p class="reveal font-mono text-sm text-cyan-300">// what’s next</p>
+    <h2 class="reveal mt-2 text-4xl font-bold tracking-tight sm:text-6xl">Let’s build something <span class="grad">unforgettable</span></h2>
+    <p class="reveal mx-auto mt-5 max-w-xl text-[var(--muted)]">Have an idea, a product or a wild experiment? My inbox is open.</p>
+    <a href="mailto:hello@example.com" data-magnet class="btn reveal mt-9 rounded-full bg-gradient-to-r from-violet-500 via-fuchsia-500 to-cyan-400 px-9 py-4 text-lg font-medium text-white shadow-[0_0_40px_-5px_rgba(168,85,247,.8)]"><i data-lucide="mail" class="h-5 w-5"></i>hello@example.com</a>
+    <div class="reveal mt-10 flex justify-center gap-4">
+      <a href="#" aria-label="GitHub" class="glass grid h-12 w-12 place-items-center rounded-full transition hover:-translate-y-1 hover:border-violet-400/60"><i data-lucide="github"></i></a>
+      <a href="#" aria-label="LinkedIn" class="glass grid h-12 w-12 place-items-center rounded-full transition hover:-translate-y-1 hover:border-cyan-400/60"><i data-lucide="linkedin"></i></a>
+      <a href="#" aria-label="Twitter" class="glass grid h-12 w-12 place-items-center rounded-full transition hover:-translate-y-1 hover:border-pink-400/60"><i data-lucide="twitter"></i></a>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="border-t border-white/10 px-5 py-8 text-center font-mono text-xs text-[var(--muted)]">© <span id="yr"></span> Alex Rivera · Designed &amp; coded with care</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasGsap = typeof gsap !== 'undefined';
+  if (window.lucide) { try { lucide.createIcons(); } catch (e) {} }
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  if (hasGsap && !reduce) document.documentElement.classList.add('js');
+
+  // Mobile menu
+  var mb = document.getElementById('menuBtn'), mm = document.getElementById('mobileMenu');
+  mb.addEventListener('click', function () { var open = mm.classList.toggle('hidden'); mm.classList.toggle('flex', !open); mb.setAttribute('aria-expanded', String(!open)); });
+  mm.addEventListener('click', function (e) { if (e.target.tagName === 'A') { mm.classList.add('hidden'); mm.classList.remove('flex'); mb.setAttribute('aria-expanded', 'false'); } });
+
+  // Typing effect
+  var words = ['Creative Developer', 'UI/UX Designer', 'AI Enthusiast'], el = document.getElementById('typed'), wi = 0, ci = 0, del = false;
+  if (reduce) { el.textContent = words[0]; } else (function tick() {
+    var w = words[wi];
+    ci += del ? -1 : 1; el.textContent = w.slice(0, ci);
+    var d = del ? 40 : 85;
+    if (!del && ci === w.length) { del = true; d = 1600; }
+    else if (del && ci === 0) { del = false; wi = (wi + 1) % words.length; d = 350; }
+    setTimeout(tick, d);
+  })();
+
+  // Hero intro
+  if (hasGsap && !reduce) {
+    document.querySelectorAll('.split').forEach(function (s) {
+      var t = s.textContent; s.innerHTML = '';
+      t.split(' ').forEach(function (word) {
+        var o = document.createElement('span'); o.style.display = 'inline-block'; o.style.overflow = 'hidden'; o.style.verticalAlign = 'top';
+        var i = document.createElement('span'); i.className = 'wi'; i.style.display = 'inline-block'; i.textContent = word + '\u00A0';
+        if (s.classList.contains('grad')) { i.style.background = 'inherit'; i.style.webkitBackgroundClip = 'text'; i.style.backgroundClip = 'text'; }
+        o.appendChild(i); s.appendChild(o);
+      });
+    });
+    gsap.set('.hero-in', { opacity: 0, y: 24 });
+    gsap.timeline({ defaults: { ease: 'power4.out' } })
+      .fromTo('.wi', { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.1, stagger: .12 }, .1)
+      .to('.hero-in', { opacity: 1, y: 0, duration: .9, stagger: .12 }, .5)
+      .fromTo('.float', { opacity: 0, scale: .7 }, { opacity: 1, scale: 1, duration: .8, stagger: .15, ease: 'back.out(1.7)', clearProps: 'opacity,scale' }, .9);
+  }
+
+  // Scroll reveals + skill bars
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      var t = en.target; io.unobserve(t);
+      if (hasGsap && !reduce) gsap.fromTo(t, { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: .9, ease: 'power3.out', delay: (Array.prototype.indexOf.call(t.parentNode.children, t) % 3) * .08 });
+      var lv = t.getAttribute('data-level'), bar = t.querySelector('.skill-bar > i');
+      if (bar && lv) setTimeout(function () { bar.style.width = lv + '%'; }, 250);
+    });
+  }, { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach(function (n) { io.observe(n); });
+
+  // Tilt + spotlight
+  var fine = window.matchMedia('(hover: hover)').matches;
+  document.querySelectorAll('.tilt').forEach(function (c) {
+    c.addEventListener('mousemove', function (e) {
+      var r = c.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      c.style.setProperty('--mx', x + 'px'); c.style.setProperty('--my', y + 'px');
+      if (!reduce) c.style.transform = 'scale(1.05) rotateX(' + ((y / r.height - .5) * -10) + 'deg) rotateY(' + ((x / r.width - .5) * 10) + 'deg)';
+    });
+    c.addEventListener('mouseleave', function () { c.style.transform = ''; });
+  });
+
+  // Scroll progress + active link
+  var bar = document.getElementById('progress'), links = document.querySelectorAll('header .nav-link'), secs = ['home', 'skills', 'work', 'contact'].map(function (id) { return document.getElementById(id); }), ticking = false;
+  function onScroll() {
+    var h = document.documentElement.scrollHeight - innerHeight;
+    bar.style.transform = 'scaleX(' + (h > 0 ? scrollY / h : 0) + ')';
+    var cur = 0; secs.forEach(function (s, i) { if (s.getBoundingClientRect().top < innerHeight * .4) cur = i; });
+    links.forEach(function (l) { l.classList.toggle('active', l.getAttribute('href') === '#' + secs[cur].id); });
+    ticking = false;
+  }
+  addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
+
+  // Custom cursor + magnetic buttons
+  if (fine && !reduce) {
+    var cur = document.getElementById('cursor'), tx = 0, ty = 0, cx = 0, cy = 0;
+    addEventListener('mousemove', function (e) { tx = e.clientX; ty = e.clientY; cur.style.opacity = 1; });
+    (function loop() { cx += (tx - cx) * .18; cy += (ty - cy) * .18; cur.style.transform = 'translate(' + cx + 'px,' + cy + 'px)'; requestAnimationFrame(loop); })();
+    document.querySelectorAll('a, button, .proj, .tilt').forEach(function (n) {
+      n.addEventListener('mouseenter', function () { cur.classList.add('big'); });
+      n.addEventListener('mouseleave', function () { cur.classList.remove('big'); });
+    });
+    document.querySelectorAll('[data-magnet]').forEach(function (b) {
+      b.addEventListener('mousemove', function (e) { var r = b.getBoundingClientRect(); b.style.transform = 'translate(' + ((e.clientX - r.left - r.width / 2) * .25) + 'px,' + ((e.clientY - r.top - r.height / 2) * .35) + 'px)'; });
+      b.addEventListener('mouseleave', function () { b.style.transform = ''; });
+    });
+  }
+})();
+</script>
+</body>
+</html>
